@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<head>
+  <script type="text/javascript" src="js/lib/d3.min.js"></script>
+  <script type="text/javascript" src="js/autocomplete.js"></script>
+  <link rel="stylesheet" href="styles/style.css" />
+</head>
+
+<body>
+
+  <div id="search" style="width:100%; height:100%;"></div>
+
+  <div class="selection">
+    <svg class="calories" style="width:100%; height:100%;"></svg>
+  </div>
+
+<script language="JavaScript">
+function getRandomColor() {
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+selections = [];
+
+function draw_selection(data) {
+  console.log("draw_selection", data);
+  selections.push(data);
+
+  svg = d3.select("svg.calories");
+
+  circle = svg.selectAll("circle").data(selections);
+  enter = circle.enter().append("circle");
+  enter.attr("cy", 60);
+  enter.attr("cx", function(d, i) { return i * 100 + 30; });
+  enter.attr("r", function(d) { return d.calories / 5; });
+  enter.attr("fill", getRandomColor);
+
+}
+
+
+function onSelect(d) {
+  console.log("onSelect", d);
+  d3.json("/food/" + d.pk, draw_selection);
+}
+
+
+function start_autocomplete(data) {
+  data = data;
+  autocomplete(document.getElementById("search"))
+    .data(data)
+    .dataField("long_desc")
+    .placeHolder("Search Foods - Start typing here")
+    .width(960)
+    .height(500)
+    .onSelected(onSelect)
+    .render();
+
+}
+
+d3.json("/food?values=long_desc&values=pk&unlimited", start_autocomplete);
+
+
+</script>
+
+</body>
+
+</html>
