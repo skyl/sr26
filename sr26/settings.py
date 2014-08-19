@@ -12,20 +12,14 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'oaafd*x0(o9bfmn%yu&ecz*uh+x3rz=kji!2_@ah484w4f01sp'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
-TEMPLATE_DEBUG = True
-
+TEMPLATE_DEBUG = DEBUG
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -84,3 +78,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
+
+from .local_settings import *
+
