@@ -9,11 +9,17 @@
 
   <div id="search" style="width:100%; height:100%;"></div>
 
-  <div class="selection">
-    <svg class="calories" style="width:100%; height:100%;"></svg>
+  <div class="selected"></div>
+
+  <div class="selections">
+    <svg class="calories figure"></svg>
+    <svg class="protein figure"></svg>
   </div>
 
 <script language="JavaScript">
+
+function daddy() {
+
 function getRandomColor() {
     var letters = '0123456789ABCDEF'.split('');
     var color = '#';
@@ -25,29 +31,53 @@ function getRandomColor() {
 
 selections = [];
 
-function draw_selection(data) {
-  console.log("draw_selection", data);
+function addSelection(data) {
   selections.push(data);
+  drawSelections();
+}
+function removeSelection(pk) {
+  // O(n) removal
+  for (var i = selections.length - 1; i >= 0; i--) {
+    if (selections[i].pk === pk) {
+      selections.splice(i, 1);
+    };
+  };
+  drawSelections();
+  return selections;
+}
 
+function drawSelections() {
+  drawCalories();
+  drawProtein();
+}
+
+function drawCalories() {
   svg = d3.select("svg.calories");
-
   circle = svg.selectAll("circle").data(selections);
   enter = circle.enter().append("circle");
   enter.attr("cy", 60);
-  enter.attr("cx", function(d, i) { return i * 100 + 30; });
+  enter.attr("cx", function(d, i) { return i * 100 + 100; });
   enter.attr("r", function(d) { return d.calories / 5; });
   enter.attr("fill", getRandomColor);
-
 }
 
+function drawProtein() {
+  svg = d3.select("svg.protein");
+  circle = svg.selectAll("circle").data(selections);
+  enter = circle.enter().append("circle");
+  enter.attr("cy", 60);
+  enter.attr("cx", function(d, i) { return i * 100 + 100; });
+  enter.attr("r", function(d) { return d.protein; });
+  enter.attr("fill", getRandomColor);
+}
 
 function onSelect(d) {
   console.log("onSelect", d);
-  d3.json("/food/" + d.pk, draw_selection);
+  d3.json("/food/" + d.pk, addSelection);
 }
 
 
-function start_autocomplete(data) {
+function startAutocomplete(data) {
   data = data;
   autocomplete(document.getElementById("search"))
     .data(data)
@@ -60,8 +90,10 @@ function start_autocomplete(data) {
 
 }
 
-d3.json("/food?values=long_desc&values=pk&unlimited", start_autocomplete);
+d3.json("/food?values=long_desc&values=pk&unlimited", startAutocomplete);
+}
 
+daddy()
 
 </script>
 
