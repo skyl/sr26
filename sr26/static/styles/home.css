@@ -1,0 +1,225 @@
+.button {
+  white-space: normal;
+}
+
+.btn {
+
+  white-space: normal;
+}
+
+
+
+/* line 1, ../compass/partials/_base.scss */
+.hidden {
+  display: none;
+}
+
+/* line 4, ../compass/partials/_base.scss */
+.left {
+  float: left;
+}
+
+/* line 7, ../compass/partials/_base.scss */
+.right {
+  float: right;
+}
+
+/* margin */
+/* line 12, ../compass/partials/_base.scss */
+.margin-mini {
+  margin: .25em;
+}
+
+/* line 15, ../compass/partials/_base.scss */
+.margin-small {
+  margin: 0.5em;
+}
+
+/* line 18, ../compass/partials/_base.scss */
+.padding-small {
+  padding: 0.5em;
+}
+
+/* line 21, ../compass/partials/_base.scss */
+.margin-auto {
+  margin: auto;
+}
+
+/* line 24, ../compass/partials/_base.scss */
+.margin-10 {
+  margin: 10px;
+}
+
+/* line 27, ../compass/partials/_base.scss */
+.nomargin {
+  margin: 0;
+}
+
+/* line 30, ../compass/partials/_base.scss */
+.margintop-10 {
+  margin-top: 10px;
+}
+
+/* line 33, ../compass/partials/_base.scss */
+.margintop-20 {
+  margin-top: 20px;
+}
+
+/* width */
+/* line 37, ../compass/partials/_base.scss */
+.width100 {
+  width: 100%;
+}
+
+/* line 40, ../compass/partials/_base.scss */
+.width98 {
+  width: 98%;
+}
+
+/* body */
+/* line 44, ../compass/partials/_base.scss */
+body {
+  margin: 0.25% 0.5%;
+}
+
+/* basic tables (TODO) */
+/* line 49, ../compass/partials/_base.scss */
+table, th, td {
+  border: 1px solid black;
+}
+
+/* line 52, ../compass/partials/_base.scss */
+td, th {
+  padding: .25em;
+}
+
+/* line 1, ../compass/partials/_search.scss */
+#search-list {
+  max-height: 260px;
+  overflow: scroll;
+  width: 98%;
+  padding: 0;
+  margin: 1em 0 1em 2%;
+  list-style-type: none;
+}
+
+/* line 10, ../compass/partials/_search.scss */
+.selected {
+  background: yellow;
+}
+
+/* line 1, ../compass/partials/_barchart.scss */
+.chart {
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+/* line 5, ../compass/partials/_barchart.scss */
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  margin: 0;
+  padding: 0;
+  color: white;
+  height: 30px;
+  float: left;
+  overflow: hidden;
+}
+
+/* line 3, ../compass/partials/_slider.scss */
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+  border: 1px solid #d3d3d3;
+  background: #e6e6e6 url('/static/css/images/ui-bg_glass_75_e6e6e6_1x400.png?1369714573') 50% 50% repeat-x;
+  font-weight: normal;
+  color: #555555;
+}
+
+/* line 9, ../compass/partials/_slider.scss */
+.ui-slider-horizontal .ui-slider-handle {
+  top: -.3em;
+  margin-left: -.6em;
+}
+
+/* line 13, ../compass/partials/_slider.scss */
+.ui-slider .ui-slider-handle {
+  position: absolute;
+  z-index: 2;
+  width: 1.2em;
+  height: 1.2em;
+  cursor: default;
+}
+
+/* line 20, ../compass/partials/_slider.scss */
+.ui-slider-horizontal .ui-slider-range {
+  top: 0;
+  height: 100%;
+}
+
+/* line 24, ../compass/partials/_slider.scss */
+.ui-slider .ui-slider-range {
+  position: absolute;
+  z-index: 1;
+  font-size: .7em;
+  display: block;
+  border: 0;
+  background-position: 0 0;
+}
+
+/* line 32, ../compass/partials/_slider.scss */
+.ui-widget-header {
+  border: 1px solid #aaaaaa;
+  background: #cccccc url('/static/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png?1369714573') 50% 50% repeat-x;
+  color: #222222;
+  font-weight: bold;
+}
+
+/* line 38, ../compass/partials/_slider.scss */
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+  border-bottom-right-radius: 4px;
+}
+
+/* line 41, ../compass/partials/_slider.scss */
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+  border-bottom-left-radius: 4px;
+}
+
+/* line 44, ../compass/partials/_slider.scss */
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+  border-top-right-radius: 4px;
+}
+
+/* line 47, ../compass/partials/_slider.scss */
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+  border-top-left-radius: 4px;
+}
+
+/* line 50, ../compass/partials/_slider.scss */
+.ui-widget-content {
+  border: 1px solid #aaaaaa;
+  background: white url('/static/css/images/ui-bg_flat_75_ffffff_40x100.png?1369714573') 50% 50% repeat-x;
+  color: #222222;
+}
+
+/* line 55, ../compass/partials/_slider.scss */
+.ui-slider-horizontal {
+  height: .8em;
+}
+
+/* line 58, ../compass/partials/_slider.scss */
+.ui-slider {
+  position: relative;
+  text-align: left;
+}
+
+/* line 1, ../compass/partials/_profile_editor.scss */
+.third {
+  text-align: center;
+  width: 32%;
+  display: inline-block;
+}
+
+/* line 1, ../compass/partials/_main_food_controller.scss */
+.main-food-controller {
+  min-height: 200px;
+}

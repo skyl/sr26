@@ -1,12 +1,127 @@
 <!DOCTYPE html>
 <head>
+  <script type="text/javascript" src="js/lib/angular.js"></script>
+  <script type="text/javascript" src="js/lib/angular-cookies.min.js"></script>
+  <script type="text/javascript" src="js/lib/ui-utils.min.js"></script>
+  <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
+
+
   <script type="text/javascript" src="js/lib/d3.min.js"></script>
-  <script type="text/javascript" src="js/autocomplete.js"></script>
-  <link rel="stylesheet" href="styles/style.css" />
+  <!--<script type="text/javascript" src="js/autocomplete.js"></script>-->
+  <script type="text/javascript" src="js/lib/underscore-min.js"></script>
+  <script type="text/javascript" src="js/global-utils.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+  <script type="text/javascript" src="js/controllers.js"></script>
+
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+  <!--<link rel="stylesheet" href="styles/style.css" />-->
+  <link rel="stylesheet" href="styles/home.css" />
 </head>
 
-<body>
+<body ng-app="RecipeUI">
 
+  <div data-ng-controller="MainFoodController" class="main-food-controller container-fluid">
+
+    <div ng-show="fs_toggle" ng-controller="FoodSearchController">
+      <!-- ui-event="{keydown: 'query_keypress($event)'}" -->
+      <div class="row">
+        <div class="col-md-6">
+          <input class="input-lg"
+            style="z-index:10; width:100%"
+            type="text"
+            ng-model="query"
+            ng-change="query_change()"
+            ui-keydown="{'enter down up esc': 'query_key($event)'}"
+            placeholder="Search for Food Components"
+          >
+          <div style="position:absolute; z-index: 1; background-color:rgba(255, 255, 255, 0.9); width:100%; margin-top:0em; border-bottom-left-radius: .618em; border-bottom-right-radius: .618em; padding-left: .5em;">
+            <!-- http://stackoverflow.com/a/13379411/177293
+              older android doesn't support overflow scroll -->
+            <ul id="search-list" style="margin:0;">
+              <li class="width100"
+                  ng-repeat="food in food_results"
+                  ng-click="select_food(food.pk)"
+                  ng-class="{'selected': $index == ready_to_select}"
+                  ng-mouseover="mouseover($index)"
+                  ng-mouseleave="mouseleave($index)"
+              >
+                {{ food.long_desc }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <lbs-to-grams></lbs-to-grams>
+
+          <div class="right margintop-10">
+            <button class="btn btn-warning"
+                    ng-click="trash_all()"
+            >X
+                <!-- TODO -->
+                <!--<i class="icon-trash"></i>-->
+            </button>
+          </div>
+        </div>
+
+      </div><!-- row -->
+    </div><!-- FoodSearchController -->
+
+
+    <!-- Table of selections -->
+    <div ng-show="fs_toggle" ng-controller="FoodTableController" style="margin-top:1em;">
+      <div ng-class="{hidden: ordered_selected_foods.length == 0}" style="border-radius:3em;">
+        <div class="row"
+            style="background-color:{{ selected_foods[pk].pastel_color }};"
+            ng-repeat="pk in ordered_selected_foods"
+        >
+          <div class="col-xs-4">
+            {{ selected_foods[pk].long_desc }}
+          </div>
+          <div class="col-xs-4">
+            <input
+                type="text" class="input-sm"
+                style="width:60%;"
+                ng-model="food_amounts[pk]"
+                ng-change="change_food_amount(pk)"> grams
+          </div>
+          <div class="col-xs-4">
+            <button class="btn btn-sm btn-success"
+                ng-repeat="weight in selected_foods[pk].weights.slice(0, 2)"
+                ng-click="add_weight(pk, weight[1])"
+            >+ {{ weight[0] }} ( {{ weight[1] }} g )
+            </button>
+          </div>
+        </div><!-- row -->
+      </div><!-- ng-class="{hidden: ordered_selected_foods.length == 0}" -->
+    </div><!-- FoodTableController -->
+
+    <!-- Nutrient Breakdown -->
+    <div ng-controller="NutrientBreakdownController">
+      <div class="row margintop-10"
+          ng-repeat="nutrient in nutrition_properties"
+          ng-show="ordered_selected_foods.length > 0"
+      >
+        <div class="col-md-2">
+          <h5 class="nomargin">
+            {{ nutrient.split('_').join(' ') }} {{ nutrient_total(nutrient) }}
+          </h5>
+        </div>
+        <div class="col-md-10">
+          <nutrient-visualization nutrient="{{ nutrient }}"></nutrient-visualization>
+        </div>
+      </div><!-- row nutrient in nutrition-properties
+                hidden: ordered_selected_foods.length == 0 -->
+    </div><!-- NutrientBreakdownController -->
+
+
+
+
+  </div><!-- MainFoodController -->
+
+
+
+<!--
   <div id="search" style="width:100%; height:100%;"></div>
 
   <div class="selected"></div>
@@ -94,6 +209,7 @@ d3.json("/food?values=long_desc&values=pk&unlimited", startAutocomplete);
 }
 
 daddy()
+-->
 
 </script>
 
