@@ -332,7 +332,8 @@
             pk: pk,
             amt: amt,
             desc: d.long_desc,
-            bcolor: d.bcolor
+            bcolor: d.bcolor,
+            pastel_color: d.pastel_color
           });
         }
       }

@@ -212,19 +212,23 @@ RecipeUI.directive 'nutrientVisualization', () ->
 
       draw = () ->
 
+        # returns abbreviated version of the food object
         data = scope.nutrient_contributions attrs.nutrient
 
         chart = d3.select(element[0])
-        chart.selectAll('*').remove()
+        #chart.selectAll('*').remove()
 
         if data.length > 0
 
-          chart = chart.append('div').attr('class', 'span12').attr('class', 'chart')
+          chart = chart.append('svg')
+              .attr('width', '100%')
+              .attr('height', '480px')
+          #.attr('class', 'span12').attr('class', 'chart')
 
           # TODO: I want the chart to completely fill the parent
           # without ever having a horizontal scrollbar
           # with the margin, that's not as easy as you would think.
-          width = element[0].parentElement.offsetWidth * .9
+          #width = element[0].parentElement.offsetWidth * .9
           #console.log chart
           #width = scope.windowWidth * .75  # span10
           #console.log width
@@ -234,6 +238,25 @@ RecipeUI.directive 'nutrientVisualization', () ->
           #console.log element[0].parentElement.style.margin
           #width = element[0].parentElement.offsetWidth
 
+          #console.log scope
+          circle = chart.selectAll('circle').data(data)
+          enter = circle.enter().append('circle')
+              .attr "cy", 60
+              .attr "cx", (d, i) -> i * 100 + 100
+              .attr "r", (d) ->
+                #console.log d
+                #console.log attrs.nutrient
+                #console.log d[attrs.nutrient]
+                # scale per nutrient constant needed
+                d.amt
+              .attr "fill", (d) -> d.pastel_color
+              # adding text element to circle
+              #.attr "text", (d) -> d.desc
+          circle.exit().remove();
+
+          #move these calculations up front with the width/height decicions
+
+          ###
           arr = (d.amt for d in data)
           total = _.reduce(arr, global.add_reduce_f, 0)
           #console.log(attrs.nutrient);
@@ -252,6 +275,7 @@ RecipeUI.directive 'nutrientVisualization', () ->
             d.bcolor
           ).text (d) ->
             d.desc
+          ###
 
       scope.timeout = null
       timeout_draw = () ->

@@ -214,32 +214,41 @@
       link: function(scope, element, attrs) {
         var draw, timeout_draw;
         draw = function() {
-          var arr, chart, d, data, min, total, width, x;
+          var chart, circle, data, enter;
           data = scope.nutrient_contributions(attrs.nutrient);
           chart = d3.select(element[0]);
-          chart.selectAll('*').remove();
           if (data.length > 0) {
-            chart = chart.append('div').attr('class', 'span12').attr('class', 'chart');
-            width = element[0].parentElement.offsetWidth * .9;
-            arr = (function() {
-              var _i, _len, _results;
-              _results = [];
-              for (_i = 0, _len = data.length; _i < _len; _i++) {
-                d = data[_i];
-                _results.push(d.amt);
-              }
-              return _results;
-            })();
-            total = _.reduce(arr, global.add_reduce_f, 0);
-            min = min_max_dict[attrs.nutrient][0];
-            x = d3.scale.linear().domain([0, _.max([total, min])]).range([0 + "px", width + "px"]);
-            return chart.selectAll().data(data).enter().append('div').style("width", function(d) {
-              return x(_.max([d.amt, 0]));
-            }).style("background-color", function(d) {
-              return d.bcolor;
-            }).text(function(d) {
-              return d.desc;
+            chart = chart.append('svg').attr('width', '100%').attr('height', '480px');
+            circle = chart.selectAll('circle').data(data);
+            enter = circle.enter().append('circle').attr("cy", 60).attr("cx", function(d, i) {
+              return i * 100 + 100;
+            }).attr("r", function(d) {
+              return d.amt;
+            }).attr("fill", function(d) {
+              return d.pastel_color;
             });
+            return circle.exit().remove();
+
+            /*
+            arr = (d.amt for d in data)
+            total = _.reduce(arr, global.add_reduce_f, 0)
+             *console.log(attrs.nutrient);
+            min = min_max_dict[attrs.nutrient][0]
+            x = d3.scale.linear().domain(
+              [0, _.max([total, min])]
+            ).range(
+              [0 + "px", width + "px"]
+            )
+            
+            chart.selectAll().data(
+              data
+            ).enter().append('div').style("width", (d) ->
+              x _.max [d.amt, 0]
+            ).style("background-color", (d) ->
+              d.bcolor
+            ).text (d) ->
+              d.desc
+             */
           }
         };
         scope.timeout = null;

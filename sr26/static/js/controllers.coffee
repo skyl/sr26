@@ -401,6 +401,7 @@ NutrientBreakdownController = ($scope, $http, $window, FoodData, Config) ->
           amt: amt
           desc: d.long_desc
           bcolor: d.bcolor
+          pastel_color: d.pastel_color
         }
     return ret
 
