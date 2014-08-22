@@ -212,53 +212,31 @@
     return {
       restrict: 'E',
       link: function(scope, element, attrs) {
-        var draw, timeout_draw;
+        var chart, draw, height;
+        height = 260;
+        chart = d3.select(element[0]);
+        chart = chart.append('svg').attr('width', '100%').attr('height', height + 'px');
         draw = function() {
-          var chart, circle, data, enter;
+          var circle, data, enter, max, r;
           data = scope.nutrient_contributions(attrs.nutrient);
-          chart = d3.select(element[0]);
+          max = min_max_dict[attrs.nutrient][1];
           if (data.length > 0) {
-            chart = chart.append('svg').attr('width', '100%').attr('height', '480px');
             circle = chart.selectAll('circle').data(data);
-            enter = circle.enter().append('circle').attr("cy", 60).attr("cx", function(d, i) {
-              return i * 100 + 100;
+            circle.exit().remove();
+            enter = circle.enter().append('circle');
+            r = d3.scale.linear().range([0, height]).domain([0, max]);
+            return circle.attr("cy", height / 2).attr("cx", function(d, i) {
+              return i * (height / 4) + (height / 4);
             }).attr("r", function(d) {
-              return d.amt;
+              return r(parseFloat(d.amt));
             }).attr("fill", function(d) {
               return d.pastel_color;
             });
-            return circle.exit().remove();
-
-            /*
-            arr = (d.amt for d in data)
-            total = _.reduce(arr, global.add_reduce_f, 0)
-             *console.log(attrs.nutrient);
-            min = min_max_dict[attrs.nutrient][0]
-            x = d3.scale.linear().domain(
-              [0, _.max([total, min])]
-            ).range(
-              [0 + "px", width + "px"]
-            )
-            
-            chart.selectAll().data(
-              data
-            ).enter().append('div').style("width", (d) ->
-              x _.max [d.amt, 0]
-            ).style("background-color", (d) ->
-              d.bcolor
-            ).text (d) ->
-              d.desc
-             */
           }
         };
-        scope.timeout = null;
-        timeout_draw = function() {
-          clearTimeout(scope.timeout);
-          return scope.timeout = setTimeout(draw, 800);
-        };
-        scope.$watch('food_amounts', timeout_draw, true);
-        scope.$watch('selected_foods', timeout_draw, true);
-        return scope.$watch('windowWidth', timeout_draw, true);
+        scope.$watch('food_amounts', draw, true);
+        scope.$watch('selected_foods', draw, true);
+        return scope.$watch('windowWidth', draw, true);
       }
     };
   });
