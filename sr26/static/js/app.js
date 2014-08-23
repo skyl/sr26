@@ -3,7 +3,7 @@
   'use strict';
   var FoodData, lbsToGramsTemplate, min_max_dict;
 
-  window.RecipeUI = angular.module('RecipeUI', ['ui.bootstrap', 'ui.utils', 'ngCookies']);
+  window.RecipeUI = angular.module('RecipeUI', ['ui.utils', 'ngCookies']);
 
   RecipeUI.factory('Config', function() {
     return {

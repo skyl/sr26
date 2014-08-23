@@ -1,6 +1,6 @@
 'use strict'
 
-window.RecipeUI = angular.module 'RecipeUI', ['ui.bootstrap', 'ui.utils', 'ngCookies']
+window.RecipeUI = angular.module 'RecipeUI', ['ui.utils', 'ngCookies']
 
 RecipeUI.factory 'Config', () ->
   {
