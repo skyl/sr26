@@ -226,7 +226,7 @@
             enter = circle.enter().append('circle');
             r = d3.scale.linear().range([0, height]).domain([0, max]);
             return circle.attr("cy", height / 2).attr("cx", function(d, i) {
-              return i * (height / 4) + (height / 4);
+              return i * (height / 6) + (height / 6);
             }).attr("r", function(d) {
               return r(parseFloat(d.amt));
             }).attr("fill", function(d) {

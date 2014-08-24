@@ -26,15 +26,6 @@ def food(request):
         /food?filter__pk__in=5&filter__pk__in=6
             Food.objects.filter(pk__in=[5,6]) as list of dicts
     """
-    # this is a select per food/nutrient.
-    # MUST be cached
-    # seriously, this take a half hour!
-    # I think it should return about 36 megs
-    # creating static file for unbacked D3 hacking
-    #res = json.dumps([
-    #    food.as_dict() for food in
-    #    Food.objects.all()
-    #])
 
     get = request.GET.copy()
     qs = Food.objects.all()
@@ -42,7 +33,6 @@ def food(request):
     # filters
     for key in filter(lambda q: q.startswith("filter__"), get.keys()):
         qs = qs.filter(**{key[8:]: get.getlist(key)})
-
 
     start = int(get.get("start", 0))
     end = start + int(get.get("limit", 10))

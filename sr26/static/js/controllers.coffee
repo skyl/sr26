@@ -369,7 +369,7 @@ NutrientBreakdownController = ($scope, $http, $window, FoodData, Config) ->
 
   $scope.windowWidth = $window.outerWidth;
   angular.element($window).bind 'resize', () ->
-    $scope.windowWidth = $window.outerWidth;
+    $scope.windowWidth = $window.outerWidth
     $scope.$apply 'windowWidth'
 
   $scope.nutrition_properties = PROPERTIES

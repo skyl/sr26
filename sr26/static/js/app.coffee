@@ -229,7 +229,8 @@ RecipeUI.directive 'nutrientVisualization', () ->
 
           circle
               .attr "cy", height / 2
-              .attr "cx", (d, i) -> i * (height/4) + (height/4)
+              # TODO - height/6 is arbitrary - circle packing or sth.
+              .attr "cx", (d, i) -> i * (height/6) + (height/6)
               .attr "r", (d) -> r(parseFloat(d.amt))
               .attr "fill", (d) -> d.pastel_color
 
