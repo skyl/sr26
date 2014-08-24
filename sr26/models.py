@@ -184,7 +184,7 @@ class Food(models.Model):
 
     @property
     def net_carbs(self):
-        return (self.carbohydrate or 0) - (self.fiber or 0)
+        return round((self.carbohydrate or 0) - (self.fiber or 0), 2)
 
     # AMINOS
     ####################
@@ -225,21 +225,21 @@ class Food(models.Model):
 
     @property
     def omega3(self):
-        return (
+        return round((
             (self.F18D3 or 0) +
             #(self.F18D3CN3 or 0) +
             (self.F20D3N3 or 0) +
             (self.F20D5 or 0) +
             (self.F22D5 or 0) +
             (self.F22D6 or 0)
-        )
+        ), 3)
 
     @property
     def omega6(self):
-        return (
+        return round((
             (self.F18D2 or 0) +
             (self.F18D3CN6 or 0) +
             (self.F20D2CN6 or 0) +
             (self.F20D3N6 or 0) +
             (self.F20D4N6 or 0)
-        )
+        ), 3)
