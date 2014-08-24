@@ -69,12 +69,13 @@
       $location.search(FoodData.food_amounts);
       return $location.hash(FoodData.ordered_selected_foods.join(','));
     };
-    FoodData.update_selected_foods = function() {
+    FoodData.load_ordered_selected_foods = function() {
       return $http({
         method: "GET",
         url: "/food",
         params: {
-          filter__pk__in: FoodData.ordered_selected_foods
+          filter__pk__in: FoodData.ordered_selected_foods,
+          limit: FoodData.ordered_selected_foods.length
         }
       }).success(function(data) {
         var food, _i, _len, _results;

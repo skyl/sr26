@@ -134,8 +134,7 @@ MainFoodController = ($scope, $cookies, $location, FoodData) ->
   # in case it came from the cookie.
   FoodData.sync_from_location()
   FoodData.sync_to_location()
-  #console.log "about to update_selected_foods"
-  FoodData.update_selected_foods()
+  FoodData.load_ordered_selected_foods()
 
   $scope.$watch 'food_amounts', FoodData.timeout_save_wip, true
   $scope.$watch 'ordered_selected_foods', FoodData.timeout_save_wip, true

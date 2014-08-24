@@ -61,12 +61,13 @@ FoodData = ($http, $location, $cookies, $timeout) ->
     $location.search FoodData.food_amounts
     $location.hash FoodData.ordered_selected_foods.join ','
 
-  FoodData.update_selected_foods = () ->
+  FoodData.load_ordered_selected_foods = () ->
     $http(
       method: "GET"
       url: "/food"
       params:
         filter__pk__in: FoodData.ordered_selected_foods
+        limit: FoodData.ordered_selected_foods.length
     ).success((data) ->
       for food in data
         #console.log(food)

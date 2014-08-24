@@ -32,7 +32,7 @@
     $location.path("");
     FoodData.sync_from_location();
     FoodData.sync_to_location();
-    FoodData.update_selected_foods();
+    FoodData.load_ordered_selected_foods();
     $scope.$watch('food_amounts', FoodData.timeout_save_wip, true);
     return $scope.$watch('ordered_selected_foods', FoodData.timeout_save_wip, true);
   };
