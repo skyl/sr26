@@ -49,10 +49,13 @@ def food(request):
         except FieldError as e:
             return http.HttpResponseBadRequest(e)
 
+    # WARNING! This is a select per Food/Nutrient!
     res = json.dumps([food.as_dict() for food in qs])
     return http.HttpResponse(res)
 
 
 def food_detail(request, pk):
     food = get_object_or_404(Food, pk=pk)
+    food.popularity += 1
+    food.save()
     return http.HttpResponse(json.dumps(food.as_dict()))
