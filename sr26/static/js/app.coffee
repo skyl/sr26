@@ -215,6 +215,13 @@ RecipeUI.directive 'nutrientVisualization', () ->
           .attr('width', '100%')
           .attr('height', height + 'px')
 
+      # d is like:
+      # {pk: 12155, amt: 327, desc: "Nuts, walnuts, english",
+      # bcolor: "#73c4a9", pastel_color: "#d0ebe2"}
+      tip = d3.tip().attr('class', 'd3-tip').html (d) ->
+        "<h5>#{d.desc}</h5> #{d.amt} #{attrs.nutrient}"
+      chart.call tip
+
       draw = () ->
 
         data = scope.nutrient_contributions attrs.nutrient
@@ -225,15 +232,23 @@ RecipeUI.directive 'nutrientVisualization', () ->
           circle = chart.selectAll('circle').data(data)
           circle.exit().remove()
           enter = circle.enter().append('circle')
+          # attributes which don't change
+          enter
+              .on 'mouseover', tip.show
+              # for small circles, rather than flicker ...
+              .on 'mouseout', tip.hide
+              # TODO - duration and delay
+              #() -> tip.hide(5000, 1000)
+              .attr "fill", (d) -> d.pastel_color
 
+          # radius can change - TODO: transition
           r = d3.scale.linear().range([0, height]).domain([0, max])
-
           circle
+              .transition().duration(2000)
+              .attr "r", (d) -> r(parseFloat(d.amt))
               .attr "cy", height / 2
               # TODO - height/6 is arbitrary - circle packing or sth.
               .attr "cx", (d, i) -> i * (height/6) + (height/6)
-              .attr "r", (d) -> r(parseFloat(d.amt))
-              .attr "fill", (d) -> d.pastel_color
 
           # TODO - hover, tooltip, sth ...
 

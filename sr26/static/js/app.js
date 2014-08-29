@@ -213,10 +213,14 @@
     return {
       restrict: 'E',
       link: function(scope, element, attrs) {
-        var chart, draw, height;
+        var chart, draw, height, tip;
         height = 260;
         chart = d3.select(element[0]);
         chart = chart.append('svg').attr('width', '100%').attr('height', height + 'px');
+        tip = d3.tip().attr('class', 'd3-tip').html(function(d) {
+          return "<h5>" + d.desc + "</h5> " + d.amt + " " + attrs.nutrient;
+        });
+        chart.call(tip);
         draw = function() {
           var circle, data, enter, max, r;
           data = scope.nutrient_contributions(attrs.nutrient);
@@ -225,13 +229,14 @@
             circle = chart.selectAll('circle').data(data);
             circle.exit().remove();
             enter = circle.enter().append('circle');
-            r = d3.scale.linear().range([0, height]).domain([0, max]);
-            return circle.attr("cy", height / 2).attr("cx", function(d, i) {
-              return i * (height / 6) + (height / 6);
-            }).attr("r", function(d) {
-              return r(parseFloat(d.amt));
-            }).attr("fill", function(d) {
+            enter.on('mouseover', tip.show).on('mouseout', tip.hide).attr("fill", function(d) {
               return d.pastel_color;
+            });
+            r = d3.scale.linear().range([0, height]).domain([0, max]);
+            return circle.transition().duration(2000).attr("r", function(d) {
+              return r(parseFloat(d.amt));
+            }).attr("cy", height / 2).attr("cx", function(d, i) {
+              return i * (height / 6) + (height / 6);
             });
           }
         };
