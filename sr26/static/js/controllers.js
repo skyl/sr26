@@ -318,6 +318,7 @@
       }
       return total.toFixed(1);
     };
+    window.nutrient_total = $scope.nutrient_total;
     $scope.nutrient_contributions = function(nutrient) {
       var amt, d, fas, pk, ret, revosf, _i, _len;
       fas = $scope.food_amounts;
@@ -333,7 +334,8 @@
             amt: amt,
             desc: d.long_desc,
             bcolor: d.bcolor,
-            pastel_color: d.pastel_color
+            pastel_color: d.pastel_color,
+            nutrient: nutrient
           });
         }
       }

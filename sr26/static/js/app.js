@@ -3,7 +3,7 @@
   'use strict';
   var FoodData, lbsToGramsTemplate, min_max_dict;
 
-  window.RecipeUI = angular.module('RecipeUI', ['ui.utils', 'ngCookies']);
+  window.RecipeUI = angular.module('RecipeUI', ['ui.utils', 'ui.bootstrap', 'ngCookies']);
 
   RecipeUI.factory('Config', function() {
     return {
@@ -171,8 +171,8 @@
     calories: [1200, 3000],
     protein: [60, 300],
     fat: [30, 200],
-    carbohydrate: [200, 500],
-    net_carbs: [180, 500],
+    carbohydrate: [0, 100],
+    net_carbs: [0, 60],
     fiber: [20, 60],
     sugar: [20, 300],
     calcium: [500, 2000],
@@ -214,7 +214,7 @@
       restrict: 'E',
       link: function(scope, element, attrs) {
         var chart, draw, height, tip;
-        height = 260;
+        height = 480;
         chart = d3.select(element[0]);
         chart = chart.append('svg').attr('width', '100%').attr('height', height + 'px');
         tip = d3.tip().attr('class', 'd3-tip').html(function(d) {
@@ -239,6 +239,89 @@
               return i * (height / 6) + (height / 6);
             });
           }
+        };
+        scope.$watch('food_amounts', draw, true);
+        scope.$watch('selected_foods', draw, true);
+        return scope.$watch('windowWidth', draw, true);
+      }
+    };
+  });
+
+  RecipeUI.directive('nutrientsSummary', function() {
+    return {
+      restrict: 'E',
+      link: function(scope, element, attrs) {
+        var chart, draw, height, individual_height;
+        console.log(scope);
+        window.scope = scope;
+        individual_height = 100;
+        height = scope.nutrition_properties.length * individual_height;
+        chart = d3.select(element[0]);
+        chart = chart.append('div').attr('width', '100%').attr('height', height + 'px');
+        draw = function() {
+          var data, enter, nutrient, nutrient_divs, rects, subd, width, _i, _len, _ref;
+          data = [];
+          _ref = scope.nutrition_properties;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            nutrient = _ref[_i];
+            subd = {
+              name: nutrient,
+              data: scope.nutrient_contributions(nutrient)
+            };
+            data.push(subd);
+          }
+          nutrient_divs = chart.selectAll('div').data(data);
+          nutrient_divs.exit().remove();
+          enter = nutrient_divs.enter().append('div');
+          enter.append("h5").html(function(d) {
+            return "" + d.name + " " + (scope.nutrient_total(d.name));
+          });
+          enter.append('svg').attr("y", function(d, i) {
+            return i * individual_height;
+          }).attr("height", "" + individual_height + "px").attr("width", "100%");
+          nutrient_divs.select("h5").html(function(d) {
+            return "" + d.name + " " + (scope.nutrient_total(d.name));
+          });
+          rects = nutrient_divs.select('svg').selectAll("rect").data(function(d) {
+            return d.data;
+          });
+          rects.exit().remove();
+          rects.enter().append("rect").attr("height", function() {
+            return individual_height;
+          }).attr("fill", function(d) {
+            return d.pastel_color;
+          });
+          width = function(d) {
+            var arr, max, maxr, nut_idx, r, scale, total, ___;
+            nut_idx = scope.nutrition_properties.indexOf(d.nutrient);
+            arr = (function() {
+              var _j, _len1, _ref1, _results;
+              _ref1 = data[nut_idx].data;
+              _results = [];
+              for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+                ___ = _ref1[_j];
+                _results.push(___.amt);
+              }
+              return _results;
+            })();
+            total = _.reduce(arr, global.add_reduce_f, 0);
+            max = _.max([total, min_max_dict[d.nutrient][1]]);
+            maxr = nutrient_divs.node().parentElement.parentElement.parentElement.parentElement.clientWidth;
+            scale = d3.scale.linear().range([0, maxr]).domain([0, max]);
+            r = scale(d.amt);
+            return r;
+          };
+          return rects.transition().duration(2000).delay(0).attr("width", width).attr("x", function(d, i) {
+            var nut_idx, widths_sofar, _j, _len1, _ref1;
+            nut_idx = scope.nutrition_properties.indexOf(d.nutrient);
+            widths_sofar = 0;
+            _ref1 = data[nut_idx].data.slice(0, i);
+            for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+              d = _ref1[_j];
+              widths_sofar += width(d);
+            }
+            return widths_sofar;
+          });
         };
         scope.$watch('food_amounts', draw, true);
         scope.$watch('selected_foods', draw, true);

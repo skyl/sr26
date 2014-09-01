@@ -1,6 +1,6 @@
 'use strict'
 
-window.RecipeUI = angular.module 'RecipeUI', ['ui.utils', 'ngCookies']
+window.RecipeUI = angular.module 'RecipeUI', ['ui.utils', 'ui.bootstrap', 'ngCookies']
 
 RecipeUI.factory 'Config', () ->
   {
@@ -155,8 +155,8 @@ min_max_dict = {
     calories: [1200, 3000],
     protein: [60, 300],
     fat: [30, 200],
-    carbohydrate: [200, 500],
-    net_carbs: [180, 500],
+    carbohydrate: [0, 100],
+    net_carbs: [0, 60],
     fiber: [20, 60],
     # starch, fructose, glucose are NA for most ..,
     #starch: 50,
@@ -209,7 +209,7 @@ RecipeUI.directive 'nutrientVisualization', () ->
 
     link: (scope, element, attrs) ->
 
-      height = 260
+      height = 480
       chart = d3.select(element[0])
       chart = chart.append('svg')
           .attr('width', '100%')
@@ -250,8 +250,6 @@ RecipeUI.directive 'nutrientVisualization', () ->
               # TODO - height/6 is arbitrary - circle packing or sth.
               .attr "cx", (d, i) -> i * (height/6) + (height/6)
 
-          # TODO - hover, tooltip, sth ...
-
       scope.$watch 'food_amounts', draw, true
       scope.$watch 'selected_foods', draw, true
       scope.$watch 'windowWidth', draw, true
@@ -259,3 +257,74 @@ RecipeUI.directive 'nutrientVisualization', () ->
   }
 
 
+RecipeUI.directive 'nutrientsSummary', () ->
+  {
+    restrict: 'E'
+
+    link: (scope, element, attrs) ->
+      console.log scope
+      window.scope = scope
+
+      individual_height = 100
+      height = scope.nutrition_properties.length * individual_height
+      chart = d3.select(element[0])
+      chart = chart.append('div')
+          .attr('width', '100%')
+          .attr('height', height + 'px')
+
+      draw = () ->
+
+        data = []
+        for nutrient in scope.nutrition_properties
+          subd = {
+            name: nutrient,
+            data: scope.nutrient_contributions nutrient
+          }
+          data.push subd
+
+        nutrient_divs = chart.selectAll('div').data(data)
+        nutrient_divs.exit().remove()
+        enter = nutrient_divs.enter().append('div')
+        enter.append("h5").html (d) ->
+            "#{d.name} #{scope.nutrient_total(d.name)}"
+        enter.append('svg')
+            .attr("y", (d, i) -> i * individual_height)
+            .attr("height", "#{individual_height}px")
+            .attr("width", "100%")
+
+        nutrient_divs.select("h5").html (d) ->
+          "#{d.name} #{scope.nutrient_total(d.name)}"
+        rects = nutrient_divs.select('svg').selectAll("rect").data((d) -> d.data)
+        rects.exit().remove()
+        rects.enter().append("rect")
+            .attr("height", () -> individual_height)
+            .attr("fill", (d) -> d.pastel_color)
+
+        width = (d) ->
+          nut_idx = scope.nutrition_properties.indexOf d.nutrient
+          arr = (___.amt for ___ in data[nut_idx].data)
+          total = _.reduce(arr, global.add_reduce_f, 0)
+          max = _.max([total, min_max_dict[d.nutrient][1]])
+          # proceed to one that is always visible! Ugh. Hrm.
+          # TODO - this can't be the way.
+          maxr = nutrient_divs.node().parentElement.parentElement.parentElement.parentElement.clientWidth
+          scale = d3.scale.linear().range([0, maxr]).domain([0, max])
+          r = scale(d.amt)
+          return r
+
+        # Should have just done these rects with divs so we don't have to calculate
+        # "widths_sofar"?
+        rects
+            .transition().duration(2000).delay(0)
+            .attr "width", width
+            .attr "x", (d, i) ->
+              nut_idx = scope.nutrition_properties.indexOf d.nutrient
+              widths_sofar = 0
+              for d in data[nut_idx].data.slice(0, i)
+                widths_sofar += width d
+              return widths_sofar
+
+      scope.$watch 'food_amounts', draw, true
+      scope.$watch 'selected_foods', draw, true
+      scope.$watch 'windowWidth', draw, true
+  }

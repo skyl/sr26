@@ -380,7 +380,7 @@ NutrientBreakdownController = ($scope, $http, $window, FoodData, Config) ->
     for pk, d of $scope.selected_foods
       total += (d[nutrient] or 0) * (fas[pk] or 0) / 100
     return total.toFixed 1
-
+  window.nutrient_total = $scope.nutrient_total
   $scope.nutrient_contributions = (nutrient) ->
     fas = $scope.food_amounts
     ret = []
@@ -401,6 +401,8 @@ NutrientBreakdownController = ($scope, $http, $window, FoodData, Config) ->
           desc: d.long_desc
           bcolor: d.bcolor
           pastel_color: d.pastel_color
+          # later on, we don't know what nutrient we are working with
+          nutrient: nutrient
         }
     return ret
 

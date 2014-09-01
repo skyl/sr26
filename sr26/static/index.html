@@ -96,6 +96,16 @@
 
     <!-- Nutrient Breakdown -->
     <div ng-controller="NutrientBreakdownController">
+      <tabset>
+        <tab heading="All">
+          <nutrients-summary></nutrients-summary>
+        </tab>
+        <tab ng-repeat="nutrient in nutrition_properties"
+             heading="{{ nutrient.split('_').join(' ') + ' ' + nutrient_total(nutrient) }}">
+          <nutrient-visualization nutrient="{{ nutrient }}"></nutrient-visualization>
+        </tab>
+      </tabset>
+      <!--
       <div class="row margintop-10"
           ng-repeat="nutrient in nutrition_properties"
           ng-show="ordered_selected_foods.length > 0"
@@ -108,7 +118,8 @@
         <div class="col-md-10">
           <nutrient-visualization nutrient="{{ nutrient }}"></nutrient-visualization>
         </div>
-      </div><!-- row nutrient in nutrition-properties
+      </div>
+      --><!-- row nutrient in nutrition-properties
                 hidden: ordered_selected_foods.length == 0 -->
     </div><!-- NutrientBreakdownController -->
 
